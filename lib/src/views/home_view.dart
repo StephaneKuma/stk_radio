@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
+import '../widgets/play_button.dart';
 import '../widgets/stk_drawer.dart';
 
 class HomeView extends StatefulWidget {
@@ -85,7 +87,12 @@ class _HomeViewState extends State<HomeView> {
           title: const Text('STK RADIO'),
           actions: <Widget>[
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Share.share(
+                  'check out my website https://stkservices.tech',
+                  subject: 'STK RADIO!',
+                );
+              },
               icon: const Icon(Icons.share),
             ),
           ],
@@ -99,7 +106,43 @@ class _HomeViewState extends State<HomeView> {
                   },
                   child: const Text('Try Again'),
                 )
-              : const Text('Home'),
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    const Spacer(),
+                    Container(
+                      height: MediaQuery.of(context).size.width * .5,
+                      width: MediaQuery.of(context).size.width * .5,
+                      decoration: const BoxDecoration(
+                        color: Colors.transparent,
+                      ),
+                      child: Image.asset(
+                        'assets/logo.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const Spacer(),
+                    const Text(
+                      'Now Playing',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 32.0,
+                      ),
+                    ),
+                    const Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: const <Widget>[
+                        PlayButton(),
+                      ],
+                    ),
+                  ],
+                ),
         ),
       ),
     );
