@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
+import '../locator/locator.dart';
+import '../services/button_service.dart';
 import '../widgets/play_button.dart';
 import '../widgets/stk_drawer.dart';
 
@@ -18,9 +18,6 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   bool _tryAgain = false;
-  bool _hasInternet = false;
-  ConnectivityResult _result = ConnectivityResult.none;
-  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   late StreamSubscription<InternetConnectionStatus> _statusSubscription;
 
   _checkConnectionState() async {
@@ -29,30 +26,22 @@ class _HomeViewState extends State<HomeView> {
         .listen((InternetConnectionStatus status) {
       final hasInternet = status == InternetConnectionStatus.connected;
 
-      if (hasInternet) {
-        setState(() => _hasInternet = hasInternet);
+      if (!hasInternet) {
+        AwesomeDialog(
+          context: context,
+          animType: AnimType.SCALE,
+          dialogType: DialogType.ERROR,
+          title: 'No Internet Connection',
+          desc: 'Please check your connectivity',
+          btnOkOnPress: () {},
+        ).show();
       }
-
-      AwesomeDialog(
-        context: context,
-        animType: AnimType.SCALE,
-        dialogType: DialogType.ERROR,
-        title: 'No Internet Connection',
-        desc: 'Please check your connectivity',
-        btnOkOnPress: () {},
-      ).show();
 
       if (_tryAgain != !hasInternet) {
         setState(() {
           _tryAgain = !hasInternet;
         });
       }
-    });
-
-    _connectivitySubscription = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) {
-      setState(() => _result = result);
     });
   }
 
@@ -61,12 +50,13 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
 
     _checkConnectionState();
+    getIt<ButtonService>().init();
   }
 
   @override
   void dispose() {
     _statusSubscription.cancel();
-    _connectivitySubscription.cancel();
+    getIt<ButtonService>().dispose();
 
     super.dispose();
   }
@@ -84,13 +74,15 @@ class _HomeViewState extends State<HomeView> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
           title: const Text('STK RADIO'),
           actions: <Widget>[
             IconButton(
               onPressed: () {
-                Share.share(
-                  'check out my website https://stkservices.tech',
-                  subject: 'STK RADIO!',
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('App link in playstore'),
+                  ),
                 );
               },
               icon: const Icon(Icons.share),
@@ -102,6 +94,11 @@ class _HomeViewState extends State<HomeView> {
           child: _tryAgain
               ? ElevatedButton(
                   onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Verifying Network State'),
+                      ),
+                    );
                     _checkConnectionState();
                   },
                   child: const Text('Try Again'),

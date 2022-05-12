@@ -15,9 +15,9 @@ class Entry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: const Icon(Icons.home_outlined),
-      title: const Text('Home'),
-      onTap: () {},
+      leading: Icon(iconData),
+      title: Text(text),
+      onTap: onTap,
     );
   }
 }

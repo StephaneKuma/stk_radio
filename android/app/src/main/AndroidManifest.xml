@@ -32,7 +32,7 @@
     </queries>
 
     <application
-        android:label="stk_radio"
+        android:label="STK Radio"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

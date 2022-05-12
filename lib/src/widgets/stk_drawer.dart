@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 
+import '../helpers/page_transition.dart';
 import '../locator/locator.dart';
 import '../services/launcher_service.dart';
 import '../views/home_view.dart';
@@ -14,20 +14,24 @@ class STKDrawer extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: <Widget>[
-          const UserAccountsDrawerHeader(
-            accountName: Text('STK RADIO'),
-            accountEmail: Text('info@stkradio.tech'),
-            currentAccountPicture: FlutterLogo(size: 42.0),
+          UserAccountsDrawerHeader(
+            accountName: const Text('STK RADIO'),
+            accountEmail: const Text('info@stkradio.tech'),
+            currentAccountPicture: Image.asset(
+              'assets/logo.png',
+              width: 42.0,
+              height: 42.0,
+            ),
           ),
           Entry(
             iconData: Icons.home_outlined,
             text: 'Home',
             onTap: () {
-              Navigator.of(context).push(PageTransition(
-                type: PageTransitionType.scale,
-                alignment: Alignment.bottomCenter,
-                child: const HomeView(),
-              ));
+              Navigator.of(context).push(
+                PageTransition(
+                  child: const HomeView(),
+                ),
+              );
             },
           ),
           Entry(
@@ -39,14 +43,17 @@ class STKDrawer extends StatelessWidget {
             iconData: Icons.facebook_sharp,
             text: 'Facebook',
             onTap: () {
-              getIt<LauncherService>().openInBrowser(url: 'https:://facebook.com');
+              getIt<LauncherService>()
+                  .openInBrowser(url: 'https:://facebook.com');
             },
           ),
           Entry(
             iconData: Icons.video_file,
             text: 'Youtube',
             onTap: () {
-              getIt<LauncherService>().openInBrowser(url: 'https:://youtube.com');},
+              getIt<LauncherService>()
+                  .openInBrowser(url: 'https:://youtube.com');
+            },
           ),
         ],
       ),

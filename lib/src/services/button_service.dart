@@ -10,7 +10,11 @@ class ButtonService {
   final PlayButtonNotifier playButtonNotifier = PlayButtonNotifier();
   final AudioHandler _audioHandler = getIt<AudioHandlerService>().audioHandler!;
 
-  void listenToPlaybackState() {
+  void init() async {
+    _listenToPlaybackState();
+  }
+
+  void _listenToPlaybackState() {
     _audioHandler.playbackState.listen((PlaybackState playbackState) {
       final isPlaying = playbackState.playing;
       final processingState = playbackState.processingState;

@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 
+import '../helpers/page_transition.dart';
 import 'home_view.dart';
 
 class SplashView extends StatefulWidget {
@@ -13,7 +13,7 @@ class SplashView extends StatefulWidget {
 }
 
 class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
-  final double _fontSize = 2;
+  double _fontSize = 2;
   double _containerSize = 1.5;
   double _textOpacity = 0.0;
   double _containerOpacity = 0.0;
@@ -36,10 +36,18 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
         curve: Curves.fastLinearToSlowEaseIn,
       ),
     )..addListener(() {
-        _textOpacity = 1.0;
+        setState(() {
+          _textOpacity = 1.0;
+        });
       });
 
     _controller.forward();
+
+    Timer(const Duration(seconds: 2), () {
+      setState(() {
+        _fontSize = 1.06;
+      });
+    });
 
     Timer(const Duration(seconds: 2), () {
       setState(() {
@@ -53,8 +61,6 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
         Navigator.pushReplacement(
           context,
           PageTransition(
-            type: PageTransitionType.scale,
-            alignment: Alignment.bottomCenter,
             child: const HomeView(),
           ),
         );
